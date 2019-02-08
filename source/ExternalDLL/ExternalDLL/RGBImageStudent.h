@@ -7,8 +7,12 @@
 #pragma once
 #include "RGBImage.h"
 class RGBImageStudent : public RGBImage {
-public:
+private:
+	RGB* pixelArray;
+	bool memoryAllocated;
 
+	void cleanMemory();
+public:
 	RGBImageStudent();
 	RGBImageStudent(const RGBImageStudent &other);
 	RGBImageStudent(const int width, const int height);

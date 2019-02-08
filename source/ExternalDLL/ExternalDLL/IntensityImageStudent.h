@@ -7,6 +7,10 @@
 #pragma once
 #include "IntensityImage.h"
 class IntensityImageStudent : public IntensityImage {
+private:
+	Intensity* pixelArray;
+	bool memoryAllocated;
+	void cleanMemory();
 public:
 	IntensityImageStudent();
 	IntensityImageStudent(const IntensityImageStudent &other);
