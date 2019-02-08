@@ -48,10 +48,13 @@ void RGBImageStudent::set(const RGBImageStudent &other) {
 }
 
 void RGBImageStudent::setPixel(int x, int y, RGB pixel) {
+	if (x < 0 || x >= getWidth()) { return; }
+	if (y < 0 || y >= getHeight()) { return; }
 	pixelArray[x + (y*getWidth())] = pixel;
 }
 
 void RGBImageStudent::setPixel(int i, RGB pixel) {
+	if (i > (getHeight() - 1) * (getWidth() - 1)) { return; }
 	pixelArray[i] = pixel;
 	/*
 	* set pixel i in "Row-Major Order"
@@ -77,9 +80,12 @@ void RGBImageStudent::setPixel(int i, RGB pixel) {
 }
 
 RGB RGBImageStudent::getPixel(int x, int y) const {
+	if (x < 0 || x >= getWidth()) { return RGB(); }
+	if (y < 0 || y >= getHeight()) { return RGB(); }
 	return pixelArray[x + (y*getWidth())];
 }
 
 RGB RGBImageStudent::getPixel(int i) const {
+	if (i > (getHeight() - 1) * (getWidth() - 1)) { return RGB(); }
 	return pixelArray[i];
 }

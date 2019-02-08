@@ -26,7 +26,7 @@ int main(int argc, char * argv[]) {
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\ti-software\\VISN\\The-Patmans-Vision\\testsets\\Set A\\TestSet Images\\female-2.png", *input)) {
+	if (!ImageIO::loadImage("C:\\ti-software\\VISN\\The-Patmans-Vision\\testsets\\Set A\\TestSet Images\\female-1.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -68,7 +68,7 @@ bool executeSteps(DLLExecution * executor) {
 		return false;
 	}
 
-	if (!executor->executePreProcessingStep2(false)) {
+	if (!executor->executePreProcessingStep2(true)) {
 		std::cout << "Pre-processing step 2 failed!" << std::endl;
 		return false;
 	}
@@ -149,7 +149,8 @@ bool executeSteps(DLLExecution * executor) {
 		return false;
 	}
 
-	drawFeatureDebugImage(*executor->resultPreProcessingStep1, executor->featuresScaled);
+	//drawFeatureDebugImage(*executor->resultPreProcessingStep2, executor->featuresScaled); // <- debug
+	drawFeatureDebugImage(*executor->resultPreProcessingStep1, executor->featuresScaled); // <- original
 
 	if (!executor->executeRepresentation()) {
 		std::cout << "Representation failed!" << std::endl;
