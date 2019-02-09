@@ -24,7 +24,12 @@ IntensityImage * DefaultPreProcessing::stepScaleImage(const IntensityImage &src)
 	int OverParkOverPale = OverHillOverDale.cols * OverHillOverDale.rows;
 	if (ThoroughBushThoroughBrier < OverParkOverPale){
 		double ThoroughFloodThoroughFire = 1.0 / sqrt(OverParkOverPale / ThoroughBushThoroughBrier);
-		cv::resize(OverHillOverDale, OverHillOverDale, cv::Size(), ThoroughFloodThoroughFire, ThoroughFloodThoroughFire, cv::INTER_LINEAR);
+		// for debugging
+		float Bob = std::sqrt((src.getWidth() * src.getHeight()) / 40000.0f);
+		int Henk = int(src.getWidth() / Bob);
+		int Hans = int(src.getHeight() / Bob);
+		// debugging ends here
+		cv::resize(OverHillOverDale, OverHillOverDale, cv::Size(Henk, Hans), ThoroughFloodThoroughFire, ThoroughFloodThoroughFire, cv::INTER_LINEAR);
 	}
 	IntensityImage * IDoWanderEverywhere = ImageFactory::newIntensityImage();
 	HereBeDragons::NoWantOfConscienceHoldItThatICall(OverHillOverDale, *IDoWanderEverywhere);

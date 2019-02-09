@@ -4,11 +4,13 @@
 * Proprietary and confidential
 */
 
-#include <iostream> //std::cout
 #include "ImageIO.h" //Image load and save functionality
 #include "HereBeDragons.h"
 #include "ImageFactory.h"
 #include "DLLExecution.h"
+
+#include <iostream> //std::cout
+#include <ctime>
 
 void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features);
 bool executeSteps(DLLExecution * executor);
@@ -62,13 +64,15 @@ int main(int argc, char * argv[]) {
 
 bool executeSteps(DLLExecution * executor) {
 
+	// for testing:
+
 	//Execute the four Pre-processing steps
 	if (!executor->executePreProcessingStep1(false)) {
 		std::cout << "Pre-processing step 1 failed!" << std::endl;
 		return false;
 	}
 
-	if (!executor->executePreProcessingStep2(true)) {
+	if (!executor->executePreProcessingStep2(false)) {
 		std::cout << "Pre-processing step 2 failed!" << std::endl;
 		return false;
 	}
@@ -150,7 +154,8 @@ bool executeSteps(DLLExecution * executor) {
 	}
 
 	//drawFeatureDebugImage(*executor->resultPreProcessingStep2, executor->featuresScaled); // <- debug
-	drawFeatureDebugImage(*executor->resultPreProcessingStep1, executor->featuresScaled); // <- original
+	drawFeatureDebugImage(*executor->resultPreProcessingStep1, executor->featuresScaled); // <- debug
+	//drawFeatureDebugImage(*executor->resultPreProcessingStep1, executor->featuresScaled); // <- original
 
 	if (!executor->executeRepresentation()) {
 		std::cout << "Representation failed!" << std::endl;

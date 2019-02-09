@@ -79,6 +79,8 @@ IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &imag
 }
 
 IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &image) const {
+	if (image.getHeight() * image.getWidth() < 40000) { return ImageFactory::newIntensityImage(image); }
+
 	float divider = std::sqrt((image.getWidth() * image.getHeight()) / 40000.0f); // TODO: improve
 	int newWidth = int(image.getWidth() / divider);
 	int newHeight = int(image.getHeight() / divider);
