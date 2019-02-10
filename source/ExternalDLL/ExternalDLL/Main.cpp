@@ -10,7 +10,7 @@
 #include "DLLExecution.h"
 
 #include <iostream> //std::cout
-#include <ctime>
+#include <chrono>
 
 void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features);
 bool executeSteps(DLLExecution * executor);
@@ -24,7 +24,7 @@ int main(int argc, char * argv[]) {
 	ImageIO::debugFolder = "C:\\ti-software\\VISN\\The-Patmans-Vision\\source\\ExternalDLL\\Debug";
 	ImageIO::isInDebugMode = true; //If set to false the ImageIO class will skip any image save function calls
 
-
+	StudentPreProcessing::scalingType = StudentPreProcessing::Lanczos;
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
@@ -63,19 +63,24 @@ int main(int argc, char * argv[]) {
 
 
 bool executeSteps(DLLExecution * executor) {
-
-	// for testing:
-
+	
 	//Execute the four Pre-processing steps
 	if (!executor->executePreProcessingStep1(false)) {
 		std::cout << "Pre-processing step 1 failed!" << std::endl;
 		return false;
 	}
 
-	if (!executor->executePreProcessingStep2(false)) {
+	// for testing:
+	auto timeMarkStart = std::chrono::high_resolution_clock::now();
+	// testing code ends here
+	if (!executor->executePreProcessingStep2(true)) {
 		std::cout << "Pre-processing step 2 failed!" << std::endl;
 		return false;
 	}
+	// for testing:
+	auto timeMarkEnd = std::chrono::high_resolution_clock::now();
+	std::cout << "Scaling took: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeMarkEnd - timeMarkStart).count() << "ns\n";
+	// testing code ends here
 	ImageIO::saveIntensityImage(*executor->resultPreProcessingStep2, ImageIO::getDebugFileName("Pre-processing-2.png"));
 
 	if (!executor->executePreProcessingStep3(false)) {

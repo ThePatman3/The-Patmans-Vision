@@ -24,11 +24,11 @@ IntensityImage * DefaultPreProcessing::stepScaleImage(const IntensityImage &src)
 	int OverParkOverPale = OverHillOverDale.cols * OverHillOverDale.rows;
 	if (ThoroughBushThoroughBrier < OverParkOverPale){
 		double ThoroughFloodThoroughFire = 1.0 / sqrt(OverParkOverPale / ThoroughBushThoroughBrier);
-		// for debugging
+		// for testing
 		float Bob = std::sqrt((src.getWidth() * src.getHeight()) / 40000.0f);
 		int Henk = int(src.getWidth() / Bob);
 		int Hans = int(src.getHeight() / Bob);
-		// debugging ends here
+		// testing code ends here
 		cv::resize(OverHillOverDale, OverHillOverDale, cv::Size(Henk, Hans), ThoroughFloodThoroughFire, ThoroughFloodThoroughFire, cv::INTER_LINEAR);
 	}
 	IntensityImage * IDoWanderEverywhere = ImageFactory::newIntensityImage();

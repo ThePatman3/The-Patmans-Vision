@@ -4,22 +4,27 @@
 #include <iostream>
 #include <cmath>
 
-float PI = 3.14159265359;
+float PI = 3.14159265359f;
 
-Intensity sinc(Intensity x) {
+// Helper functions:
+double sinc(float x) {
 	if (x == 0) return 1;
 	return (std::sin(PI*x)) / (PI*x);
 }
 
-Intensity lanczos2(Intensity x) {
+double lanczos2(float x) {
 	if (x < 2) {
 		return ((std::sin(PI*x)) / (PI*x)) * ((std::sin((PI*x) / 2)) / ((PI*x) / 2));
 	}
-	return 0;
+	return 0.0;
 }
 
-Intensity StudentPreProcessing::lanczosKernel(Intensity x) const {
-	return sinc(x) * lanczos2(x);
+// default scalingType
+StudentPreProcessing::ScalingType StudentPreProcessing::scalingType = StudentPreProcessing::Lanczos;
+
+// StudentPreProcessing private functions:
+Intensity StudentPreProcessing::lanczosKernel(float x) const {
+	return Intensity(sinc(x) * lanczos2(x));
 }
 
  
@@ -42,7 +47,7 @@ Intensity StudentPreProcessing::lanczosInterpolate(const Intensity* source, floa
 
 	Intensity result = 0;
 	for (int i = 0; i < 4;i++) {
-		result += lanczosKernel((x + 1) - i) * source[i];
+		result += Intensity(lanczosKernel((x + 1) - i) * source[i]);
 	}
 	return result;
 }
@@ -74,6 +79,16 @@ Intensity StudentPreProcessing::biLanczosInterpolate(const IntensityImage& sourc
 	return result;
 }
 
+
+Intensity StudentPreProcessing::cubicInterpolate(const Intensity* source, float x) const {
+
+}
+
+Intensity StudentPreProcessing::biCubicInterpolate(const IntensityImage& source, float x, float y) const {
+
+}
+
+// StudentPreProcessing public functions:
 IntensityImage * StudentPreProcessing::stepToIntensityImage(const RGBImage &image) const {
 	return nullptr;
 }

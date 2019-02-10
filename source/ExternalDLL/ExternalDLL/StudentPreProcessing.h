@@ -8,7 +8,7 @@
 #include "PreProcessing.h"
 class StudentPreProcessing : public PreProcessing {
 private:
-	Intensity lanczosKernel(Intensity x) const;
+	Intensity lanczosKernel(float x) const;
 
 	// Takes four intensity pixels and a float x which tells where between the second and third pixels the interpolation should take place
 	// if x <= 0 then the interpolation will take place precisely at the second pixel, if x >= 1 then the interpolation will take place precisely at the third pixel
@@ -18,7 +18,16 @@ private:
 
 	// Extrapolates the intensity of a pixel at coordinate (x;y) using the source image as reference.
 	Intensity biLanczosInterpolate(const IntensityImage& source, float x, float y) const;
+
+	Intensity cubicInterpolate(const Intensity* source, float x) const;
+	Intensity biCubicInterpolate(const IntensityImage& source, float x, float y) const;
 public:
+	static enum ScalingType
+	{
+		Lanczos, BiCubic
+	};
+	static ScalingType scalingType;
+
 	IntensityImage * stepToIntensityImage(const RGBImage &image) const;
 	IntensityImage * stepScaleImage(const IntensityImage &image) const;
 	IntensityImage * stepEdgeDetection(const IntensityImage &image) const;
