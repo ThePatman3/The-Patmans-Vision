@@ -57,9 +57,10 @@ Intensity StudentPreProcessing::biLanczosInterpolate(const IntensityImage& sourc
 	int YValues[4] = { int(y) - 1, int(y), int(y) + 1, int(y) + 2 };
 	for (int i = 0; i < 4;i++) {
 		if (XValues[i] < 0) { XValues[i] = 0; }
-		if (XValues[i] >= source.getWidth()) { XValues[i] = source.getWidth() - 1; }
+		else if (XValues[i] >= source.getWidth()) { XValues[i] = source.getWidth() - 1; }
+
 		if (YValues[i] < 0) { YValues[i] = 0; }
-		if (YValues[i] >= source.getHeight()) { YValues[i] = source.getHeight() - 1; }
+		else if (YValues[i] >= source.getHeight()) { YValues[i] = source.getHeight() - 1; }
 	}
 
 	Intensity intermediateValues[4] = { 0,0,0,0 };
@@ -81,10 +82,39 @@ Intensity StudentPreProcessing::biLanczosInterpolate(const IntensityImage& sourc
 
 
 Intensity StudentPreProcessing::cubicInterpolate(const Intensity* source, float x) const {
+	// Cubic interpolation formula from https://www.paulinternet.nl/?page=bicubic
+	if (x <= 0) { return source[1]; }
+	if (x >= 1) { return source[2]; }
 
+	return source[1] + 0.5 * x*(source[2] - source[0] + x * (2.0*source[0] - 5.0*source[1] + 4.0*source[2] - source[3] + x * (3.0*(source[1] - source[2]) + source[3] - source[0])));
 }
 
 Intensity StudentPreProcessing::biCubicInterpolate(const IntensityImage& source, float x, float y) const {
+	int XValues[4] = { int(x) - 1, int(x), int(x) + 1, int(x) + 2 };
+	int YValues[4] = { int(y) - 1, int(y), int(y) + 1, int(y) + 2 };
+	for (int i = 0; i < 4;i++) {
+		if (XValues[i] < 0) { XValues[i] = 0; }
+		else if (XValues[i] >= source.getWidth()) { XValues[i] = source.getWidth() - 1; }
+
+		if (YValues[i] < 0) { YValues[i] = 0; }
+		else if (YValues[i] >= source.getHeight()) { YValues[i] = source.getHeight() - 1; }
+	}
+
+	Intensity intermediateValues[4] = { 0,0,0,0 };
+
+	for (int i = 0; i < 4; i++) {
+		Intensity neighbours[4] = {
+			source.getPixel(XValues[0], YValues[i]),
+			source.getPixel(XValues[1], YValues[i]),
+			source.getPixel(XValues[2], YValues[i]),
+			source.getPixel(XValues[3], YValues[i])
+		};
+
+		intermediateValues[i] = cubicInterpolate(neighbours, x);
+	}
+
+	Intensity result = cubicInterpolate(intermediateValues, y);
+	return result;
 
 }
 
@@ -101,16 +131,31 @@ IntensityImage * StudentPreProcessing::stepScaleImage(const IntensityImage &imag
 	int newHeight = int(image.getHeight() / divider);
 	IntensityImage* result = ImageFactory::newIntensityImage(newWidth, newHeight);
 
-	for (int x = 0; x < newWidth; x++) {
-		for (int y = 0;y < newHeight;y++) {
-			Intensity pixel = biLanczosInterpolate(
-				image,
-				(x / float(newWidth)) * image.getWidth(),
-				(y / float(newHeight)) * image.getHeight()
-			);
-			result->setPixel(x, y, pixel);
+	if (scalingType == ScalingType::Lanczos) {
+		for (int x = 0; x < newWidth; x++) {
+			for (int y = 0;y < newHeight;y++) {
+				Intensity pixel = biLanczosInterpolate(
+					image,
+					(x / float(newWidth)) * image.getWidth(),
+					(y / float(newHeight)) * image.getHeight()
+				);
+				result->setPixel(x, y, pixel);
+			}
 		}
 	}
+	else if (scalingType == ScalingType::BiCubic) {
+		for (int x = 0; x < newWidth; x++) {
+			for (int y = 0;y < newHeight;y++) {
+				Intensity pixel = biCubicInterpolate(
+					image,
+					(x / float(newWidth)) * image.getWidth(),
+					(y / float(newHeight)) * image.getHeight()
+				);
+				result->setPixel(x, y, pixel);
+			}
+		}
+	}
+	
 	return result;
 }
 
