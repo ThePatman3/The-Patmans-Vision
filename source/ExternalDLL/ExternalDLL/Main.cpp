@@ -28,7 +28,7 @@ int main(int argc, char * argv[]) {
 
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\ti-software\\VISN\\The-Patmans-Vision\\testsets\\Set A\\TestSet Images\\male-3.png", *input)) {
+	if (!ImageIO::loadImage("C:\\ti-software\\VISN\\The-Patmans-Vision\\testsets\\Set A\\TestSet Images\\female-1.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -70,17 +70,11 @@ bool executeSteps(DLLExecution * executor) {
 		return false;
 	}
 
-	// for testing:
-	auto timeMarkStart = std::chrono::high_resolution_clock::now();
-	// testing code ends here
 	if (!executor->executePreProcessingStep2(true)) {
 		std::cout << "Pre-processing step 2 failed!" << std::endl;
 		return false;
 	}
-	// for testing:
-	auto timeMarkEnd = std::chrono::high_resolution_clock::now();
-	std::cout << "Scaling took: " << std::chrono::duration_cast<std::chrono::nanoseconds>(timeMarkEnd - timeMarkStart).count() << "ns\n";
-	// testing code ends here
+	
 	ImageIO::saveIntensityImage(*executor->resultPreProcessingStep2, ImageIO::getDebugFileName("Pre-processing-2.png"));
 
 	if (!executor->executePreProcessingStep3(false)) {
